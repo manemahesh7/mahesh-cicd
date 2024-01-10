@@ -18,14 +18,14 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
       with:
         registry: ${{ secrets.AWS_REGISTRY_URL }}
-        region: ${{ secrets.AWS_REGION }}
+        region: us-east-1
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Build and push Docker image
       env:
         ECR_REGISTRY: ${{ secrets.AWS_REGISTRY_URL }}
-        IMAGE_NAME: "your-image-name"
+        IMAGE_NAME: "python-app-image"
         TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$IMAGE_NAME:$TAG .
