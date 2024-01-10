@@ -13,24 +13,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v1
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        registry: ${{ secrets.AWS_REGISTRY_URL }}
-        region: ${{ secrets.AWS_REGION }}
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secret.AWS_REGION }}
 
-    - name: Build and push Docker image
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
       env:
-        ECR_REGISTRY: ${{ secrets.AWS_REGISTRY_URL }}
-        IMAGE_NAME: "python-app-image"
-        TAG: ${{ github.sha }}
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: python-app-image
+        IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$IMAGE_NAME:$TAG .
-        docker push $ECR_REGISTRY/$IMAGE_NAME:$TAG
-
-    - name: Logout of Amazon ECR
-      if: always()
-      run: docker logout ${{ secrets.AWS_REGISTRY_URL }}
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
