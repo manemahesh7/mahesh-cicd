@@ -44,7 +44,7 @@ jobs:
 
       - name: Build and Push Docker Image
         env:
-          ECR_REGISTRY: "637423591082.dkr.ecr.us-east-1.amazonaws.com/python-app-image"
+          ECR_REGISTRY: "637423591082.dkr.ecr.us-east-1.amazonaws.com"
           IMAGE_NAME: "python-app-image"
           TAG: ${{ github.sha }}
         run: |
