@@ -37,6 +37,11 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+          
+
       - name: Build and Push Docker Image
         env:
           ECR_REGISTRY: "637423591082.dkr.ecr.us-east-1.amazonaws.com/python-app-image"
