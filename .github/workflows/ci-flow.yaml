@@ -26,3 +26,18 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::637423591082:role/my-github-user-role
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.AWS_ECR_REGISTRY }}/${{ secrets.AWS_ECR_REPO_NAME }}:${{ github.sha }} .
+          docker push ${{ secrets.AWS_ECR_REGISTRY }}/${{ secrets.AWS_ECR_REPO_NAME }}:${{ github.sha }}
