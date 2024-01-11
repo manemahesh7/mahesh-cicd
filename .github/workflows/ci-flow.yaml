@@ -38,6 +38,10 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.AWS_ECR_REGISTRY }}/${{ secrets.AWS_ECR_REPO_NAME }}:latest .
-          docker push ${{ secrets.AWS_ECR_REGISTRY }}/${{ secrets.AWS_ECR_REPO_NAME }}:latest
+      env:
+        ECR_REGISTRY: "637423591082.dkr.ecr.us-east-1.amazonaws.com/python-app-image"
+        IMAGE_NAME: "python-app-image"
+        TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$IMAGE_NAME:$TAG .
+        docker push $ECR_REGISTRY/$IMAGE_NAME:$TAG
