@@ -1,1 +1,21 @@
+name: Basic Workflow Dispatch Example using manual trigger
 
+on:
+  workflow_dispatch:
+    # inputs:
+    #   environment:
+    #     description: 'The environment to deploy to'
+    #     required: true
+    #     default: 'production'
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Deploy using manual trigger
+        run: echo "basic workflow dispatch "
+        #run: echo "Deploying to ${{ github.event.inputs.environment }} environment"
