@@ -1,32 +1,47 @@
+# This is a basic workflow to help you get started with Actions
 name: Connect to an AWS role from a GitHub repository
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 env:
-  AWS_REGION: "us-east-1"
+  AWS_REGION : "us-east-1" 
 
+# Permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
 jobs:
   AssumeRoleAndCallIdentity:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
-        
-      - name: Configure and setup AWS CLI
+
+      - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::637423591082:role/my-github-user-role
+          role-to-assume: arn:aws:iam::637423591082:role/my-github-user-role #change to reflect your IAM role’s ARN
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
-
       # Hello from AWS: WhoAmI
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
 
+      #- name: Checkout Repository
+      # uses: actions/checkout@v2
+
+      # - name: Setup AWS CLI
+      #   uses: aws-actions/configure-aws-credentials@v2
+      #   with:
+      #     role-to-assume: arn:aws:iam::637423591082:role/my-github-user-role
+      #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
+      #     aws-region: ${{ env.AWS_REGION }}
+
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@v1
+          
 
       - name: Build and Push Docker Image
         env:
