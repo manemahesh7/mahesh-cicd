@@ -1,0 +1,11 @@
+name: Workflow02
+on:
+  repository_dispatch:
+    types:
+      - trigger-workflow02
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+   # your existing steps of workflow
