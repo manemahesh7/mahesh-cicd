@@ -23,20 +23,11 @@ jobs:
           role-to-assume: arn:aws:iam::637423591082:role/my-github-user-role #change to reflect your IAM role’s ARN
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
+          
       # Hello from AWS: WhoAmI
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
-
-      #- name: Checkout Repository
-      # uses: actions/checkout@v2
-
-      # - name: Setup AWS CLI
-      #   uses: aws-actions/configure-aws-credentials@v2
-      #   with:
-      #     role-to-assume: arn:aws:iam::637423591082:role/my-github-user-role
-      #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
-      #     aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
