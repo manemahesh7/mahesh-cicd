@@ -9,3 +9,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
    # your existing steps of workflow
+    - name: Print completion message
+      run: echo "Workflow02 completed successfully!"
